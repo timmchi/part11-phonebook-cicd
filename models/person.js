@@ -6,11 +6,12 @@ const url = process.env.MONGODB_URI
 
 console.log('connecting to', url)
 
-mongoose.connect(url)
-  .then(result => {
-    console.log('connected to MongoDB')
+mongoose
+  .connect(url)
+  .then((result) => {
+    console.log('connected to MongoDB', result)
   })
-  .catch(err => {
+  .catch((err) => {
     console.log('error connecting to MongoDB:', err.message)
   })
 
@@ -18,18 +19,18 @@ const personSchema = new mongoose.Schema({
   name: {
     type: String,
     minLength: 3,
-    required: true
+    required: true,
   },
   phone: {
     type: String,
     minLength: 8,
     required: true,
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return /^\d{2,3}-\d{6,}$/.test(v)
       },
-      message: props => `${props.value} is not a valid phone number!`
-    }
+      message: (props) => `${props.value} is not a valid phone number!`,
+    },
   },
 })
 
@@ -38,7 +39,7 @@ personSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
-  }
+  },
 })
 
 module.exports = mongoose.model('Person', personSchema)
